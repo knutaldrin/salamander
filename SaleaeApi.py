@@ -59,10 +59,13 @@ class _SaleaeSocket(object):
             # TODO: Handle error
             raise
 
-    def request(self, cmd):
+    def request(self, cmd, *args):
 
         try:
-            self._sock.send(cmd + '\0')
+            # Make sure there are no Nones
+            params = ''.join([',' + param if param else ',' for param in args])
+
+            self._sock.send(cmd + params + '\0')
 
             response = self._sock.recv(self._BUFSIZE).split('\n')
 
@@ -82,6 +85,27 @@ class _SaleaeSocket(object):
         except SaleaeError:
             # TODO: Handle error
             raise
+
+    def set_trigger(self, params):
+        """
+        Set triggers for active channels.
+        Number of values must match number of channels in Logic.
+
+        :param params: list of values
+        """
+
+        edge = False
+
+        for param in params:
+            if param not in (None, 'high', 'low', 'negedge', 'posedge'):
+                raise ValueError('Trigger values must be high|low|negedge|posedge')
+
+            if param in ('negedge', 'posedge'):
+                if edge:
+                    raise ValueError('Cannot have more than one edge trigger')
+                edge = True
+
+        self.request('set_trigger', *params)
 
     def get_connected_devices(self):
         """
