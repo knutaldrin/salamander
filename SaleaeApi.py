@@ -184,3 +184,23 @@ class _SaleaeSocket(object):
             })
 
         return devices
+
+    def get_performance(self):
+        """
+        The currently selected performance level.
+
+        :return: Performance value
+        :rtype:  int
+        """
+        return int(self.request('get_performance')[0])
+
+    def set_performance(self, performance):
+        """
+        Sets the performance level. Valid options are: 20, 25, 33, 50 and 100.
+
+        Note: This call will change the sample rate currently selected.
+
+        :param performance: Wanted performance level
+        """
+
+        self.request('set_performance', performance)
