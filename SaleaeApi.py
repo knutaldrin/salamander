@@ -63,7 +63,7 @@ class _SaleaeSocket(object):
 
         try:
             # Make sure there are no Nones
-            params = ''.join([',' + param if param else ',' for param in args])
+            params = ''.join([',' + str(param) if param is not None else ',' for param in args])
 
             self._sock.send(cmd + params + '\0')
 
@@ -89,6 +89,7 @@ class _SaleaeSocket(object):
     def set_trigger(self, params):
         """
         Set triggers for active channels.
+
         Number of values must match number of channels in Logic.
 
         :param params: list of values
@@ -106,6 +107,15 @@ class _SaleaeSocket(object):
                 edge = True
 
         self.request('set_trigger', *params)
+
+    def set_num_samples(self, samples):
+        """
+        Sets number of samples to capture.
+
+        :param samples: Number of samples
+        """
+
+        self.request('set_num_samples', samples)
 
     def get_connected_devices(self):
         """
