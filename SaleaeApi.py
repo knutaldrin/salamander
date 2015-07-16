@@ -6,6 +6,16 @@ import socket
 
 __all__ = ['connect', 'SaleaeError', 'NAKError', 'ResponseError']
 
+# Possible responses from Logic
+_ACK = 'ACK'
+_NAK = 'NAK'
+
+#: Receive buffer size
+_BUFSIZE = 1024
+
+#: Timeout length
+_TIMEOUT = 2
+
 
 def connect(host='127.0.0.1', port=10429):
     """
@@ -34,13 +44,6 @@ class ResponseError(SaleaeError):
 
 class _SaleaeSocket(object):
 
-    #: Receive buffer size
-    _BUFSIZE = 1024
-
-    # Possible responses from Logic
-    _ACK = 'ACK'
-    _NAK = 'NAK'
-
     def __init__(self, host, port):
         """
         Abstraction of the Saleae Logic socket API
@@ -53,7 +56,7 @@ class _SaleaeSocket(object):
         try:
             self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self._sock.connect((host, port))
-            self._sock.settimeout(2)
+            self._sock.settimeout(_TIMEOUT)
 
         except socket.error:
             # TODO: Handle error
@@ -67,13 +70,13 @@ class _SaleaeSocket(object):
 
             self._sock.send(cmd + params + '\0')
 
-            response = self._sock.recv(self._BUFSIZE).split('\n')
+            response = self._sock.recv(_BUFSIZE).split('\n')
 
             result = response.pop()
 
-            if result == 'NAK':
+            if result == _NAK:
                 raise NAKError
-            elif result != 'ACK':
+            elif result != _ACK:
                 raise ResponseError('Response neither "ACK" nor "NAK"')
 
             return response
