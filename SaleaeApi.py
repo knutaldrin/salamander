@@ -117,6 +117,38 @@ class _SaleaeSocket(object):
 
         self.request('set_num_samples', samples)
 
+    def set_sample_rate(self, digital_sample_rate, analog_sample_rate):
+        """
+        Sets digital and analog sample rates.
+
+        The sample rates must be valid for the current performance level and channel combination.
+        :see: get_all_sample_rates
+
+        :param digital_sample_rate:
+        :param analog_sample_rate:
+        """
+
+        self.request('set_sample_rate', digital_sample_rate, analog_sample_rate)
+
+    def get_all_sample_rates(self):
+        """
+        Get all valid digital/analog sample rate combinations
+        for the current performance level and channel combination.
+
+        :return: list of (digital_sample_rate, analog_sample_rate)
+        :rtype: [(int, int)]
+        """
+
+        sample_rates = []
+
+        response = self.request('get_all_sample_rates')
+
+        for line in response:
+            (digital, analog) = line.split(', ')
+            sample_rates.append((int(digital), int(analog)))
+
+        return sample_rates
+
     def get_connected_devices(self):
         """
         Fetches a list of all connected Saleae devices.
