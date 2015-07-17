@@ -282,3 +282,10 @@ class _SaleaeSocket(object):
 
         self.request('set_active_channels', 'digital_channels', digital, 'analog_channels', analog)
 
+    def reset_active_channels(self):
+        """
+        Resets all channels for active device.
+        """
+
+        self.request('reset_active_channels')
+
