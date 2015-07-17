@@ -232,3 +232,14 @@ class _SaleaeSocket(object):
         """
 
         self.request('set_capture_pretrigger_buffer_size', size)
+
+    def select_active_device(self, index):
+        """
+        Make the selected device active.
+        NOTE: index starts at one, not zero.
+
+        :param index: Device index, starting from one
+        """
+
+        self.request('select_active_device', index)
+
