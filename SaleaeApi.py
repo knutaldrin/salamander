@@ -204,3 +204,21 @@ class _SaleaeSocket(object):
         """
 
         self.request('set_performance', performance)
+
+    def get_capture_pretrigger_buffer_size(self):
+        """
+        Current pretrigger buffer size.
+
+        :return int: Buffer size
+        """
+
+        return int(self.request('get_capture_pretrigger_buffer_size')[0])
+
+    def set_capture_pretrigger_buffer_size(self, size):
+        """
+        Sets pretrigger buffer size.
+
+        :param size: Buffer size
+        """
+
+        self.request('set_capture_pretrigger_buffer_size', size)
