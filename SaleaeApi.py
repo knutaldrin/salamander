@@ -243,3 +243,20 @@ class _SaleaeSocket(object):
 
         self.request('select_active_device', index)
 
+    def get_active_channels(self):
+        """
+        Get active digital and analog channels
+        :return: Tuple containing (digital, analog)
+        :rtype:  [int], [int]
+        """
+
+        response = self.request('get_active_channels')[0].split(',')
+        response = [field.strip() for field in response]
+
+        analog_pos = response.index('analog_channels')
+
+        digital = [int(ch) for ch in response[1:analog_pos]]
+        analog = [int(ch) for ch in response[analog_pos+1:]]
+
+        return digital, analog
+
