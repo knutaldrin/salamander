@@ -272,3 +272,13 @@ class _SaleaeSocket(object):
 
         return digital, analog
 
+    def set_active_channels(self, digital, analog):
+        """
+        Sets the specified channels to be active, and the ones not specified as inactive.
+
+        :param digital: Channels to record digital
+        :param analog:  Channels to record analog
+        """
+
+        self.request('set_active_channels', 'digital_channels', digital, 'analog_channels', analog)
+
