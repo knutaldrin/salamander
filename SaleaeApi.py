@@ -73,12 +73,24 @@ class _SaleaeSocket(object):
         :rtype:  [str]
         """
 
-
         try:
-            # Make sure there are no Nones
-            params = ''.join([',' + str(param) if param is not None else ',' for param in args])
+            # Filter function for properly formatting the command with/without arguments
+            def filter_param(param):
+                if param is None:
+                    return ''
+                elif type(param) is list:
+                    return ','.join(filter_param(field) for field in param)
+                else:
+                    return str(param)
 
-            self._sock.send(cmd + params + '\0')
+            params = ','.join(filter_param(param) for param in args)
+
+            self._sock.send(''.join([
+                cmd,
+                ',' if params else '',
+                params,
+                '\0'
+            ]))
 
             response = self._sock.recv(_BUFSIZE).split('\n')
 
