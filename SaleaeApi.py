@@ -19,6 +19,7 @@ _TIMEOUT = 2
 
 def connect(host='127.0.0.1', port=10429):
     """
+    Create a new connection to Saleae Logic.
 
     :param host: Hostname/IP of the Logic instance to connect to
     :type  host: str
@@ -63,6 +64,15 @@ class _SaleaeSocket(object):
             raise
 
     def request(self, cmd, *args):
+        """
+        Make a request to the Saleae Logic socket API.
+
+        :param   cmd: API command
+        :param   args: Command arguments
+        :return: List of lines returned from Logic. Does not return ACK/NAK.
+        :rtype:  [str]
+        """
+
 
         try:
             # Make sure there are no Nones
