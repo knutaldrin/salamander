@@ -322,3 +322,14 @@ class _SaleaeSocket(object):
 
         self.request('capture_to_file', file_path)
 
+    def is_processing_complete(self):
+        """
+        Check if analog signal processing is complete after last capture.
+
+        Returns a boolean value if there is any analog data, or raises a NAKError if not.
+        :return bool: Is data processing complete?
+        :raise NAKError: If there is no analog data recorded.
+        """
+
+        return True if self.request('is_processing_complete')[0] == 'TRUE' else False
+
