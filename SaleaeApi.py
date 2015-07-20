@@ -289,3 +289,36 @@ class _SaleaeSocket(object):
 
         self.request('reset_active_channels')
 
+    def capture(self):
+        """
+        Starts a capture. This function blocks until the capture is done or the socket times out
+        (at which point it will throw an exception)
+
+        :raise socket.timeout: If the capture is not done when the socket times out
+        """
+
+        self.request('capture')
+
+    def stop_capture(self):
+        """
+        Stops the ongoing capture.
+        NOTE: If there is no ongoing capture, the software will crash.
+        """
+
+        try:
+            self.request('stop_capture')
+        except NAKError:  # This simply means there is no data after the capture
+            pass
+
+        # If there are no exceptions, data was stored after the capture
+
+    def capture_to_file(self, file_path):
+        """
+        Starts a capture, and saves the results to specified file path.
+        NOTE: Logic needs permission to write to the path.
+        :param file_path: Where to save the results
+        :raise socket.timeout: If the capture is not done when the socket times out
+        """
+
+        self.request('capture_to_file', file_path)
+
