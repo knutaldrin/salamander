@@ -333,3 +333,66 @@ class _SaleaeSocket(object):
 
         return True if self.request('is_processing_complete')[0] == 'TRUE' else False
 
+
+
+sock = connect()
+import pprint
+import time
+pp = pprint.PrettyPrinter()
+
+#sock.set_trigger(['hi+gh', 'low', 'posedge', None, None, 'negedge', None, 'high', 'high', 'low', 'posedge', None, None, 'negedge', None, 'high'])
+
+#sock.set_trigger(['high', 'low', 'low', None, None, None, 'high', 'low'])
+
+sock.set_active_channels([0, 1, 2, 3, 4, 5, 6, 7], [])
+sock.set_trigger(['high', 'low', None, 'posedge', None, None, None, 'low'])
+
+pp.pprint(sock.get_connected_devices())
+
+pp.pprint(sock.get_all_sample_rates())
+
+sock.set_sample_rate(*sock.get_all_sample_rates()[0])
+
+sock.set_active_channels([0, 1, 2, 3], [4, 5, 6, 7])
+
+pp.pprint(sock.get_performance())
+
+sock.set_performance(33)
+
+pp.pprint(sock.get_performance())
+
+pp.pprint(sock.get_active_channels())
+
+sock.select_active_device(1)
+
+sock.set_active_channels([1], [])
+
+sock.set_active_channels([0,1,2,3], [4,5,7])
+sock.set_trigger(['high', 'low', None, 'posedge'])
+
+#exit()
+
+try:
+    sock.capture()
+except socket.timeout:
+    pass
+
+print('Capture started\n')
+
+# This throws an exception, since it has not yet been triggered
+try:
+    time.sleep(1)
+    sock.stop_capture()
+except NAKError:
+    print('Did not capture data')
+else:
+    print('Captured data!')
+
+sock.set_trigger([])
+
+sock.capture()
+
+#time.sleep(3)
+print sock.is_processing_complete()
+time.sleep(1)
+print sock.is_processing_complete()
